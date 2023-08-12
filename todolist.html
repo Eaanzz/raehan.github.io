@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List</title>
+    <style>
+      /* Gaya untuk daftar tugas */
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+      }
+
+      .input-tugas {
+        margin-bottom: 20px;
+      }
+
+      .input-tugas input {
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      .input-tugas button {
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+
+      .hasil-tugas ul {
+        list-style: none;
+        padding: 0;
+        width: 300px;
+      }
+
+      .hasil-tugas li {
+        padding: 10px;
+        background-color: #f4f4f4;
+        margin: 5px 0;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .hasil-tugas button {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Container untuk tugas-tugas -->
+    <div class="container">
+      <!-- Input tugas baru -->
+      <div class="input-tugas">
+        <button id="toggleColorButton">Mode Dark</button>
+        <input
+          type="text"
+          placeholder="Masukkan Tugas"
+          id="tugas"
+          class="tugas"
+        />
+        <button id="tambah">Tambah Tugas</button>
+      </div>
+      <!-- Daftar tugas yang ditampilkan -->
+      <div class="hasil-tugas">
+        <ul id="daftar-tugas">
+          <!-- Tugas-tugas akan ditambahkan di sini -->
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      // Fungsi untuk menyimpan daftar tugas ke dalam local storage
+      function simpanDaftarTugasKeLocalStorage() {
+        const ul = document.getElementById("daftar-tugas");
+        localStorage.setItem("daftarTugas", ul.innerHTML);
+      }
+
+      // Event listener saat halaman selesai dimuat
+      window.addEventListener("load", function () {
+        const ul = document.getElementById("daftar-tugas");
+        const daftarTugas = localStorage.getItem("daftarTugas");
+        if (daftarTugas) {
+          ul.innerHTML = daftarTugas;
+        }
+      });
+
+      // Event listener pada tombol "Tambah Tugas"
+      let btn = document.getElementById("tambah");
+      btn.addEventListener("click", function () {
+        const input = document.getElementById("tugas").value;
+        const ul = document.getElementById("daftar-tugas");
+
+        let li = document.createElement("li");
+        li.innerHTML = `
+        ${input}
+        <button onclick="hapusTugas(this)">Hapus</button>
+      `;
+        ul.appendChild(li);
+        input.value = "";
+
+        simpanDaftarTugasKeLocalStorage();
+      });
+
+      // Fungsi untuk menghapus tugas dari daftar
+      function hapusTugas(button) {
+        const li = button.parentElement;
+        const ul = document.getElementById("daftar-tugas");
+        ul.removeChild(li);
+        simpanDaftarTugasKeLocalStorage();
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const button = document.getElementById("toggleColorButton");
+        const body = document.body;
+        let isBlackMode = false;
+
+        button.addEventListener("click", function () {
+          const button = document.getElementById("toggleColorButton");
+          if (isBlackMode) {
+            body.style.backgroundColor = "white";
+            button.innerHTML = "Mode Dark";
+          } else {
+            body.style.backgroundColor = "black";
+            button.innerHTML = "Mode White";
+          }
+          isBlackMode = !isBlackMode;
+        });
+      });
+    </script>
+  </body>
+</html>
